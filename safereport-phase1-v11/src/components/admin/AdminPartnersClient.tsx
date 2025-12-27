@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AdminKeyGate from "./AdminKeyGate";
 
 type PartnerRow = {
@@ -68,8 +68,8 @@ export default function AdminPartnersClient() {
   }
 
   return (
-    <AdminKeyGate>
-      {(key) => (
+    /* Passing children as an explicit prop to resolve TypeScript's missing children error */
+    <AdminKeyGate children={(key: string) => (
         <div style={{ padding: 24, maxWidth: 980, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
@@ -170,7 +170,6 @@ export default function AdminPartnersClient() {
             ))}
           </div>
         </div>
-      )}
-    </AdminKeyGate>
+      )} />
   );
 }

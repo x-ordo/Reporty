@@ -4,6 +4,7 @@ import { requireAdmin } from "@/server/auth";
 import { db, schema } from "@/server/db";
 import { getObjectStream } from "@/server/storage";
 import { eq } from "drizzle-orm";
+import { Buffer } from "node:buffer";
 
 async function streamToBuffer(stream: any): Promise<Buffer> {
   const chunks: Buffer[] = [];

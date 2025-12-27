@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 export default function AdminKeyGate({ children }: { children: (key: string) => React.ReactNode }) {
   const [key, setKey] = useState("");

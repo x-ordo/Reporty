@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { env } from "./env";
+import { Buffer } from "node:buffer";
 
 function getKey(): Buffer {
   const raw = env.EVIDENCE_HMAC_KEY;

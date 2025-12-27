@@ -1,3 +1,5 @@
+import React from "react";
+
 export const runtime = "nodejs";
 
 export default function PartnerLayout({ children }: { children: React.ReactNode }) {

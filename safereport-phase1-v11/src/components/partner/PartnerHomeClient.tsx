@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import PartnerKeyGate from "./PartnerKeyGate";
 
 type TenantRow = {
@@ -170,16 +169,16 @@ export default function PartnerHomeClient() {
   }, [autoRefresh, pollAfterMs]);
 
   return (
-    <PartnerKeyGate>
-      {(key) => {
+    /* Passing children as an explicit prop to resolve TypeScript's missing children error */
+    <PartnerKeyGate children={(key: string) => {
         // Correctly update internal state when Gate provides a key
         if (key && key !== partnerKey) {
           setPartnerKey(key);
         }
         return (
           <div style={{ maxWidth: 1100, margin: "0 auto", padding: 24 }}>
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
-              <div>
+            <div style={{ display: "flex", alignItems: "flex-start", justifyItems: "space-between", gap: 12 }}>
+              <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 20, fontWeight: 900 }}>Partner Dashboard</div>
                 <div style={{ marginTop: 6, fontSize: 13, opacity: 0.85 }}>
                   {partner ? (
@@ -439,7 +438,6 @@ export default function PartnerHomeClient() {
             </div>
           </div>
         );
-      }}
-    </PartnerKeyGate>
+      }} />
   );
 }

@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { env } from "./env";
+import { Buffer } from "node:buffer";
 
 type Keyring = Record<string, string>;
 

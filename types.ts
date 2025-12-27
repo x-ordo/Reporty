@@ -18,7 +18,7 @@ export interface TimelineEvent {
   type: string;
   actorRole: 'user' | 'admin' | 'partner' | 'system';
   data: Record<string, any>;
-  dataFull?: Record<string, any>; // 복호화된 데이터
+  dataFull?: Record<string, any>; // 복호화된 데이터 (어드민 전용)
   prevEventHash: string | null;
   eventHash: string;
   createdAt: string;
@@ -27,13 +27,12 @@ export interface TimelineEvent {
 export interface Report {
   id: string;
   tenantId: string;
-  publicCode?: string; // 생성시에만 노출
   publicCodeHash: string;
   status: ReportStatus;
   priority: ReportPriority;
   subject: string | null;
   category: string | null;
-  content: string; // decrypted ciphertext
+  content: string; // 복호화된 본문
   createdAt: string;
   lastViewedAt: string | null;
   encryptionKeyId: string;
@@ -50,6 +49,10 @@ export interface DefensePack {
   signature: string;
   pdfPath?: string;
   createdAt: string;
+  generatedAt?: string;
+  storedHead: string;
+  computedHead: string;
+  eventsCount: number;
 }
 
 export interface Tenant {
@@ -69,4 +72,4 @@ export interface Tenant {
   };
 }
 
-export type ViewState = 'LANDING' | 'ONBOARD' | 'HOOK_TOOL' | 'REPORT_FORM' | 'ADMIN' | 'PARTNER';
+export type ViewState = 'LANDING' | 'ONBOARD' | 'HOOK_TOOL' | 'REPORT_FORM' | 'ADMIN' | 'PARTNER' | 'TRACK';

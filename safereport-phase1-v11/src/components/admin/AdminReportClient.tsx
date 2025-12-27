@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AdminKeyGate from "./AdminKeyGate";
 
 type Report = {
@@ -35,9 +35,8 @@ function fmt(dt?: string | null) {
 
 export default function AdminReportClient({ reportId }: { reportId: string }) {
   return (
-    <AdminKeyGate>
-      {(key) => <ReportView adminKey={key} reportId={reportId} />}
-    </AdminKeyGate>
+    /* Passing children as an explicit prop to resolve TypeScript's missing children error */
+    <AdminKeyGate children={(key: string) => <ReportView adminKey={key} reportId={reportId} />} />
   );
 }
 
@@ -56,7 +55,7 @@ const pendingPack = useMemo(() => {
 
 const canRetry = useMemo(() => {
   const latest = packs[0];
-  return !!latest && latest.status === \"failed\" && !pendingPack;
+  return !!latest && latest.status === "failed" && !pendingPack;
 }, [packs, pendingPack]);
 
 

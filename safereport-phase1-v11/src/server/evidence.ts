@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { env } from "./env";
+import { Buffer } from "node:buffer";
 
 function hmacHex(data: string, prevHash: string | null): string {
   const keyRaw = env.EVIDENCE_HMAC_KEY;

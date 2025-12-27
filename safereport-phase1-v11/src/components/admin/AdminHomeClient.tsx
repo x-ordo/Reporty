@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AdminKeyGate from "./AdminKeyGate";
 
 type ReportRow = {
@@ -20,9 +20,8 @@ function fmt(dt?: string | null) {
 
 export default function AdminHomeClient() {
   return (
-    <AdminKeyGate>
-      {(key) => <ReportsView adminKey={key} />}
-    </AdminKeyGate>
+    /* Passing children as an explicit prop to resolve TypeScript's missing children error */
+    <AdminKeyGate children={(key: string) => <ReportsView adminKey={key} />} />
   );
 }
 

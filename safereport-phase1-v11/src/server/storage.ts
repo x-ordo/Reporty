@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "./env";
+import { Buffer } from "node:buffer";
 
 export const r2 = new S3Client({
   region: "auto",

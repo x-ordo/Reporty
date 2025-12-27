@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AdminKeyGate from "./AdminKeyGate";
 
 type TenantRow = {
@@ -131,8 +131,8 @@ export default function AdminTenantsClient() {
   }, [adminKey]);
 
   return (
-    <AdminKeyGate>
-      {(key) => {
+    /* Passing children as an explicit prop to resolve TypeScript's missing children error */
+    <AdminKeyGate children={(key: string) => {
         if (key !== adminKey) setAdminKey(key);
         return (
           <div style={{ marginTop: 12 }}>
@@ -333,8 +333,7 @@ export default function AdminTenantsClient() {
             )}
           </div>
         );
-      }}
-    </AdminKeyGate>
+      }} />
   );
 }
 
