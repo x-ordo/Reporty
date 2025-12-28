@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Report, DefensePack } from '../types';
 import { ICONS } from '../constants';
 
@@ -10,6 +10,33 @@ interface Props {
 }
 
 const DefenseReport: React.FC<Props> = ({ report, companyName, pack }) => {
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch(`/api/admin/reports/${report.id}/pdf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': process.env.GEMINI_API_KEY || '',
+        },
+      });
+
+      if (response.ok) {
+        alert('PDF 생성이 시작되었습니다. 잠시 후 목록에서 확인하세요.');
+      } else {
+        const errorData = await response.json();
+        alert(`PDF 생성에 실패했습니다: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('PDF download error:', error);
+      alert('PDF 생성 요청 중 오류가 발생했습니다.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div className="bg-white p-12 max-w-4xl mx-auto border-2 border-slate-100 shadow-sm print:shadow-none font-sans text-slate-900">
       {/* Official Watermark / Header */}

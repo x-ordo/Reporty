@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import crypto from "node:crypto";
 import { env } from "./env";
 import { Buffer } from "node:buffer";
@@ -57,7 +58,7 @@ export function decryptJson<T = unknown>(b64: string, keyId?: string | null): T 
   return JSON.parse(plaintext) as T;
 }
 
-export function sha256Hex(input: string): string {
+function sha256Hex(input: string): string {
   return crypto.createHash("sha256").update(input).digest("hex");
 }
 
@@ -66,7 +67,12 @@ export function makePublicCodeHash(code: string): string {
   return sha256Hex(code + ":" + env.PUBLIC_CODE_SECRET);
 }
 
-export function makePartnerKeyHash(key: string): string {
-  // hash = sha256(key + secret)
-  return sha256Hex(key + ":" + env.PUBLIC_CODE_SECRET);
+const SALT_ROUNDS = 12;
+
+export async function makePartnerKeyHash(key: string): Promise<string> {
+  return bcrypt.hash(key, SALT_ROUNDS);
+}
+
+export async function comparePartnerKey(key: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(key, hash);
 }

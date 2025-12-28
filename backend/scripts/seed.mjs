@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import process from "node:process";
+import { makePartnerKeyHash } from "../src/server/crypto.ts";
 
 function must(name) {
   const v = process.env[name];
@@ -17,8 +18,7 @@ const partnerId = process.env.SEED_PARTNER_ID || crypto.randomUUID();
 const tenantId = process.env.SEED_TENANT_ID || crypto.randomUUID();
 
 const partnerKey = process.env.SEED_PARTNER_KEY || ("prk_" + crypto.randomBytes(24).toString("base64url"));
-const partnerKeyHash = crypto.createHash("sha256").update(partnerKey + ":" + must("PUBLIC_CODE_SECRET")).digest("hex");
-const keyPrefix = partnerKey.slice(0, 10);
+const keyPrefix = partnerKey.slice(0, 8);
 
 
 const inviteCode = (process.env.SEED_INVITE_CODE || "IRONDEMO")
@@ -27,10 +27,15 @@ const inviteCode = (process.env.SEED_INVITE_CODE || "IRONDEMO")
   .slice(0, 12);
 
 async function main() {
+  const partnerKeyHash = await makePartnerKeyHash(partnerKey);
+
   await sql`
     INSERT INTO partners (id, name, invite_code, api_key_hash, key_prefix, revenue_share_rate, updated_at)
     VALUES (${partnerId}::uuid, ${partnerName}, ${inviteCode}, ${partnerKeyHash}, ${keyPrefix}, 0.00, now())
-    ON CONFLICT (id) DO NOTHING
+    ON CONFLICT (id) DO UPDATE SET 
+      api_key_hash = ${partnerKeyHash},
+      key_prefix = ${keyPrefix},
+      updated_at = now()
   `;
 
   await sql`
