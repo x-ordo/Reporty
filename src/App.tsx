@@ -7,6 +7,7 @@ import DefenseReport from './components/DefenseReport';
 import LegalDisclaimer from './components/LegalDisclaimer';
 import EvidenceChain from './components/EvidenceChain';
 import PIIGuard from './components/PIIGuard';
+import MerkleAnchor from './components/MerkleAnchor';
 import { generateEmploymentRule, generateRiskAssessment } from './services/aiService';
 import { useFocusTrap } from './hooks/useFocusTrap';
 
@@ -243,6 +244,11 @@ const App: React.FC = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Merkle Anchor Section */}
+      <div className="mt-8 bg-white rounded-[40px] border border-slate-100 shadow-2xl p-8">
+        <MerkleAnchor reports={reports} />
       </div>
 
       {selectedReport && (
