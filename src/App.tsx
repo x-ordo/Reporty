@@ -6,6 +6,7 @@ import SecurityAnimation from './components/SecurityAnimation';
 import DefenseReport from './components/DefenseReport';
 import LegalDisclaimer from './components/LegalDisclaimer';
 import EvidenceChain from './components/EvidenceChain';
+import PIIGuard from './components/PIIGuard';
 import { generateEmploymentRule, generateRiskAssessment } from './services/aiService';
 import { useFocusTrap } from './hooks/useFocusTrap';
 
@@ -22,6 +23,7 @@ const App: React.FC = () => {
   const [packProgress, setPackProgress] = useState(0);
   const [currentPack, setCurrentPack] = useState<DefensePack | null>(null);
   const [trackCode, setTrackCode] = useState('');
+  const [narrativeText, setNarrativeText] = useState('');
 
   const closeModal = useCallback(() => {
     setSelectedReport(null);
@@ -660,9 +662,17 @@ const App: React.FC = () => {
                   autoComplete="off"
                   aria-required="true"
                   aria-describedby="narrative-hint"
+                  value={narrativeText}
+                  onChange={(e) => setNarrativeText(e.target.value)}
                   className="w-full p-6 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-[24px] transition-all outline-none font-medium text-xl h-60 leading-relaxed shadow-sm resize-none"
                 ></textarea>
                 <p id="narrative-hint" className="text-xs text-slate-400 ml-1">육하원칙(누가, 언제, 어디서, 무엇을, 어떻게, 왜)에 따라 상세히 기술해주세요.</p>
+                <PIIGuard
+                  text={narrativeText}
+                  onMaskedTextChange={setNarrativeText}
+                  showDeepAnalysis={true}
+                  className="mt-4"
+                />
               </div>
 
               <aside className="p-8 bg-emerald-50 rounded-[32px] border border-emerald-100 flex items-center gap-6" aria-label="보안 알림">
