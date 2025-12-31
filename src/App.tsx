@@ -5,6 +5,7 @@ import { ICONS } from './constants';
 import SecurityAnimation from './components/SecurityAnimation';
 import DefenseReport from './components/DefenseReport';
 import LegalDisclaimer from './components/LegalDisclaimer';
+import EvidenceChain from './components/EvidenceChain';
 import { generateEmploymentRule, generateRiskAssessment } from './services/aiService';
 import { useFocusTrap } from './hooks/useFocusTrap';
 
@@ -292,21 +293,10 @@ const App: React.FC = () => {
                     </section>
                     <section>
                       <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Chain of Evidence (HMAC Timeline)</h4>
-                      <div className="border-l-4 border-slate-100 ml-6 space-y-14">
-                        {selectedReport.events.map((e, idx) => (
-                          <div key={idx} className="relative pl-12 group">
-                            <div className="absolute -left-[14px] top-1 w-6 h-6 rounded-full border-[6px] border-white shadow-lg bg-slate-900 transition-transform group-hover:scale-125"></div>
-                            <div className="flex justify-between items-center mb-3">
-                              <p className="font-black text-xl uppercase tracking-tighter text-slate-900">{e.type.replace(/_/g, ' ')}</p>
-                              <span className="text-[11px] font-mono text-slate-400 bg-slate-50 px-3 py-1 rounded-full">{new Date(e.createdAt).toLocaleString()}</span>
-                            </div>
-                            <p className="text-slate-500 text-sm font-medium leading-relaxed">{JSON.stringify(e.data)}</p>
-                            <div className="mt-4 font-mono text-[9px] text-slate-300 bg-slate-50 px-2 py-1 rounded inline-block">
-                               NODE_H: {e.eventHash}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                      <EvidenceChain
+                        events={selectedReport.events}
+                        headHash={selectedReport.evidenceHeadHash}
+                      />
                     </section>
                   </div>
                   <aside className="space-y-8">
