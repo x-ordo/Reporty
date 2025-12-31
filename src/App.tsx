@@ -8,6 +8,7 @@ import LegalDisclaimer from './components/LegalDisclaimer';
 import EvidenceChain from './components/EvidenceChain';
 import PIIGuard from './components/PIIGuard';
 import MerkleAnchor from './components/MerkleAnchor';
+import CaseLawSearch from './components/CaseLawSearch';
 import { generateEmploymentRule, generateRiskAssessment } from './services/aiService';
 import { useFocusTrap } from './hooks/useFocusTrap';
 
@@ -283,6 +284,7 @@ const App: React.FC = () => {
                  <TabButton id="tab-timeline" ariaControls="panel-timeline" active={!aiAdvice} onClick={() => setAiAdvice(null)} label="Timeline" />
                  <TabButton id="tab-strategy" ariaControls="panel-strategy" active={aiAdvice === 'STRATEGY'} onClick={() => { setAiAdvice('STRATEGY'); handleRiskAssessment(selectedReport); }} label="Risk Analysis" icon={<ICONS.Activity className="w-4 h-4" />} />
                  <TabButton id="tab-defense" ariaControls="panel-defense" active={aiAdvice === 'DEFENSE_PACK'} onClick={() => setAiAdvice('DEFENSE_PACK')} label="Defense Pack" icon={<ICONS.FileText className="w-4 h-4" />} />
+                 <TabButton id="tab-caselaw" ariaControls="panel-caselaw" active={aiAdvice === 'CASE_LAW'} onClick={() => setAiAdvice('CASE_LAW')} label="판례 검색" icon={<ICONS.Search className="w-4 h-4" />} />
               </div>
             </div>
 
@@ -388,6 +390,15 @@ const App: React.FC = () => {
                         riskAssessment={riskAssessmentText}
                       />
                    )}
+                </div>
+              )}
+
+              {aiAdvice === 'CASE_LAW' && (
+                <div id="panel-caselaw" role="tabpanel" aria-labelledby="tab-caselaw" tabIndex={0} className="animate-in fade-in zoom-in-95 duration-500">
+                  <CaseLawSearch
+                    reportContent={selectedReport.content}
+                    reportCategory={selectedReport.category}
+                  />
                 </div>
               )}
             </div>
