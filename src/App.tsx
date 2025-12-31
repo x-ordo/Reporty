@@ -17,6 +17,7 @@ const App: React.FC = () => {
   const [generatedRule, setGeneratedRule] = useState('');
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [aiAdvice, setAiAdvice] = useState<string | null>(null);
+  const [riskAssessmentText, setRiskAssessmentText] = useState<string>('');
   const [packProgress, setPackProgress] = useState(0);
   const [currentPack, setCurrentPack] = useState<DefensePack | null>(null);
   const [trackCode, setTrackCode] = useState('');
@@ -24,6 +25,7 @@ const App: React.FC = () => {
   const closeModal = useCallback(() => {
     setSelectedReport(null);
     setAiAdvice(null);
+    setRiskAssessmentText('');
     setPackProgress(0);
     setCurrentPack(null);
   }, []);
@@ -70,6 +72,7 @@ const App: React.FC = () => {
     try {
       const assessment = await generateRiskAssessment(report.content);
       setAiAdvice(assessment || '');
+      setRiskAssessmentText(assessment || '');
     } finally {
       setIsLoading(false);
     }
@@ -380,10 +383,11 @@ const App: React.FC = () => {
                         )}
                      </div>
                    ) : (
-                     <DefenseReport 
-                        report={selectedReport} 
-                        companyName={companyName} 
+                     <DefenseReport
+                        report={selectedReport}
+                        companyName={companyName}
                         pack={currentPack}
+                        riskAssessment={riskAssessmentText}
                       />
                    )}
                 </div>

@@ -2,36 +2,32 @@
 import React, { useState } from 'react';
 import { Report, DefensePack } from '../types';
 import { ICONS } from '../constants';
+import { generateDefensePackPDF, downloadPDF } from '../services/pdfService';
 
 interface Props {
   report: Report;
   companyName: string;
   pack: DefensePack;
+  riskAssessment?: string;
 }
 
-const DefenseReport: React.FC<Props> = ({ report, companyName, pack }) => {
+const DefenseReport: React.FC<Props> = ({ report, companyName, pack, riskAssessment }) => {
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownload = async () => {
+  const handleDownloadPDF = async () => {
     setIsDownloading(true);
     try {
-      const response = await fetch(`/api/admin/reports/${report.id}/pdf`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-key': process.env.GEMINI_API_KEY || '',
-        },
+      const pdfBytes = await generateDefensePackPDF({
+        report,
+        riskAssessment,
+        generatedAt: new Date(),
       });
 
-      if (response.ok) {
-        alert('PDF 생성이 시작되었습니다. 잠시 후 목록에서 확인하세요.');
-      } else {
-        const errorData = await response.json();
-        alert(`PDF 생성에 실패했습니다: ${errorData.error}`);
-      }
+      const filename = `DefensePack_${report.id}_${new Date().toISOString().split('T')[0]}.pdf`;
+      downloadPDF(pdfBytes, filename);
     } catch (error) {
-      console.error('PDF download error:', error);
-      alert('PDF 생성 요청 중 오류가 발생했습니다.');
+      console.error('PDF generation error:', error);
+      alert('PDF 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setIsDownloading(false);
     }
@@ -128,7 +124,7 @@ const DefenseReport: React.FC<Props> = ({ report, companyName, pack }) => {
           <ICONS.Shield className="w-16 h-16" />
         </div>
         <p className="text-[10px] text-slate-400 leading-relaxed max-w-xl mx-auto italic">
-          본 Defense Pack은 SafeReport Iron Dome 엔진에 의해 자동 생성된 무결성 스냅샷입니다. 
+          본 Defense Pack은 SafeReport Iron Dome 엔진에 의해 자동 생성된 무결성 스냅샷입니다.
           각 이벤트는 이전 해시를 포함한 HMAC 체인으로 암호학적으로 연결되어 있으며, 사후 조작 시 시스템 서명이 파기됩니다.
         </p>
         <p className="mt-6 font-mono text-[9px] text-slate-300 uppercase tracking-widest">
@@ -136,12 +132,27 @@ const DefenseReport: React.FC<Props> = ({ report, companyName, pack }) => {
         </p>
       </div>
 
-      <div className="mt-12 flex justify-end gap-3 no-print" role="group" aria-label="인쇄 옵션">
+      <div className="mt-12 flex justify-end gap-3 no-print" role="group" aria-label="다운로드 옵션">
         <button
           onClick={() => window.print()}
-          className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-sm flex items-center gap-3 hover:bg-slate-800 transition shadow-2xl"
+          className="bg-slate-200 text-slate-700 px-6 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-slate-300 transition"
         >
-          <ICONS.FileText className="w-4 h-4" aria-hidden="true" /> 리포트 다운로드 / 인쇄
+          <ICONS.FileText className="w-4 h-4" aria-hidden="true" /> 브라우저 인쇄
+        </button>
+        <button
+          onClick={handleDownloadPDF}
+          disabled={isDownloading}
+          className="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-sm flex items-center gap-3 hover:bg-blue-700 transition shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isDownloading ? (
+            <>
+              <ICONS.Activity className="w-4 h-4 animate-spin" aria-hidden="true" /> PDF 생성 중...
+            </>
+          ) : (
+            <>
+              <ICONS.FileText className="w-4 h-4" aria-hidden="true" /> PDF 다운로드
+            </>
+          )}
         </button>
       </div>
     </div>
